@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bookstore>
+    <book id="1">
+        <name>三体</name>
+        <author>刘念慈</author>
+        <year>2015</year>
+        <price>50</price>
+    </book>
+    <book id="2">
+        <name>神们自己</name>
+        <author>阿西莫夫</author>
+        <year>2016</year>
+        <price>10</price>
+    </book>
+</bookstore>
