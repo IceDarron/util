@@ -7,6 +7,8 @@ src/main/java/calculateFileLines         计算文件行数
 
 src/main/java/io                         io实例
 
+src/main/java/qr                         二维码     
+
 src/main/java/singleton                  单例模式
 
 src/main/java/socket                     socket通讯实例
