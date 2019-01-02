@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Connection connection = DruidUtils.getCoreConnection();
         try {
-            connection.getMetaData();
+            System.out.println(connection.getMetaData());
         } catch (SQLException e) {
             e.printStackTrace();
         }
