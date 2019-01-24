@@ -98,11 +98,34 @@ public class SnowflakeIdWorker {
 
     /**
      * 构造函数
+     */
+    public SnowflakeIdWorker() {
+    }
+
+    /**
+     * 构造函数
      *
      * @param dataCenterId 数据中心ID (0~31)
      * @param workerId     工作ID (0~31)
      */
     public SnowflakeIdWorker(long dataCenterId, long workerId) {
+        if (dataCenterId > maxDataCenterId || dataCenterId < 0) {
+            throw new IllegalArgumentException(String.format("dataCenter Id can't be greater than %d or less than 0", maxDataCenterId));
+        }
+        if (workerId > maxWorkerId || workerId < 0) {
+            throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
+        }
+        this.dataCenterId = dataCenterId;
+        this.workerId = workerId;
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param dataCenterId 数据中心ID (0~31)
+     * @param workerId     工作ID (0~31)
+     */
+    public void init(long dataCenterId, long workerId) {
         if (dataCenterId > maxDataCenterId || dataCenterId < 0) {
             throw new IllegalArgumentException(String.format("dataCenter Id can't be greater than %d or less than 0", maxDataCenterId));
         }
