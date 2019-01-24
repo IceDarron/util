@@ -27,13 +27,16 @@ public class Runner implements Callable {
     @Override
     public Object call() throws Exception {
         Long currentTime = System.currentTimeMillis();
-        while (currentTime - createTime <= 1000) {
-            snowflakeIdWorker.init(Thread.currentThread().getId(), 0);
-            snowflakeIdWorker.nextId();
+        Long threadId = Thread.currentThread().getId();
+        Long id = 0L;
+        while (currentTime - createTime <= 100) {
+            snowflakeIdWorker.init(0, threadId);
+            id = snowflakeIdWorker.nextId();
+            System.out.println(Long.toBinaryString(id));
             atomicLong.incrementAndGet();
             currentTime = System.currentTimeMillis();
         }
         countDownLatch.countDown();
-        return 1;
+        return threadId;
     }
 }
