@@ -22,7 +22,11 @@ package snowflake;
  * 加起来刚好64位，为一个Long型。<br>
  * <p>
  * SnowFlake的优点是，整体上按照时间自增排序，并且整个分布式系统内不会产生ID碰撞(由数据中心ID和机器ID作区分)，并且效率较高，
- * 经测试，SnowFlake每秒能够产生26万ID左右。
+ * <p>
+ * 参考：https://segmentfault.com/a/1190000011282426
+ * <p>
+ * 测试单线程下生成数量：3991920 4061997 4028990 4054655 4009236
+ * 测试多线程（100线程）下生成数量：3578814
  */
 public class SnowflakeIdWorker {
 
