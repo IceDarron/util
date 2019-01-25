@@ -8,20 +8,18 @@ public class Test {
 
     public static void main(String[] args) {
 
-//        SnowflakeIdWorker snowflakeIdWorker = new SnowflakeIdWorker();
-//        snowflakeIdWorker.init(0,0);
-
+        SnowflakeIdWorker snowflakeIdWorker = new SnowflakeIdWorker(0,0);
 
         // 单线程测试
-//        long count = 0;
-//        long start = System.currentTimeMillis();
-//        long end = 0L;
-//        while (end - start <= 1000) {
-//            snowflakeIdWorker.nextId();
-//            end = System.currentTimeMillis();
-//            count++;
-//        }
-//        System.out.println(count);
+        long count = 0;
+        long start = System.currentTimeMillis();
+        long end = 0L;
+        while (end - start <= 1000) {
+            snowflakeIdWorker.nextId();
+            end = System.currentTimeMillis();
+            count++;
+        }
+        System.out.println(count);
 
 //        for (int i = 0; i < 1000; i++) {
 //            long id = snowflakeIdWorker.nextId();
