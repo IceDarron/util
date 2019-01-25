@@ -34,7 +34,7 @@ public class Main {
                             "values (?,?,?,?,?,?,?) ");
 
             int i = 1;
-            statement.setLong(i++,0);
+            statement.setLong(i++, 0);
             statement.setString(i++, "0253287379");
             statement.setString(i++, "3645119");
             statement.setTimestamp(i++, new Timestamp(System.currentTimeMillis()));

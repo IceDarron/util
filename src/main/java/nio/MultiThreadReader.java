@@ -3,7 +3,10 @@ package nio;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class MultiThreadReader implements Runnable {
 
@@ -17,6 +20,11 @@ public class MultiThreadReader implements Runnable {
         this.startIndex = startIndex > 0 ? startIndex - 1 : startIndex;
         this.rSize = rSize;
         this.endIndex = startIndex + rSize;
+    }
+
+    public static void main(String[] args) {
+        ExecutorService executorService = new ThreadPoolExecutor(5, 10, 1000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue());//线程池
+
     }
 
     public void run() {
@@ -57,11 +65,5 @@ public class MultiThreadReader implements Runnable {
                 e.printStackTrace();
             }
         }
-    }
-
-
-    public static void main(String[] args) {
-        ExecutorService executorService = new ThreadPoolExecutor(5, 10, 1000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue());//线程池
-
     }
 }

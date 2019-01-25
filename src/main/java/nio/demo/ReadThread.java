@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * 这个线程用来读取文件，当获取到指定关键字时，在指定的对象加1
  */
-public class ReadThread implements Runnable{
+public class ReadThread implements Runnable {
 
     //定义字节数组（取水的竹筒）的长度
     private final int BUFF_LEN = 256;
@@ -26,22 +26,23 @@ public class ReadThread implements Runnable{
      * 用于多线程开始前统一执行操作或者多线程执行完成后调用主线程执行相应操作的类
      */
     private CountDownLatch doneSignal;
-    public ReadThread(long start, long end, RandomAccessFile raf,String keywords,CountDownLatch doneSignal){
+
+    public ReadThread(long start, long end, RandomAccessFile raf, String keywords, CountDownLatch doneSignal) {
         this.start = start;
         this.end = end;
-        this.raf  = raf;
+        this.raf = raf;
         this.keywords = keywords;
         this.doneSignal = doneSignal;
     }
 
-    public void run(){
+    public void run() {
         try {
             raf.seek(start);
             //本线程负责读取文件的大小
             long contentLen = end - start;
             //定义最多需要读取几次就可以完成本线程的读取
-            long times = contentLen / BUFF_LEN+1;
-            System.out.println(this.toString() + " 需要读的次数："+times);
+            long times = contentLen / BUFF_LEN + 1;
+            System.out.println(this.toString() + " 需要读的次数：" + times);
             byte[] buff = new byte[BUFF_LEN];
             int hasRead = 0;
             String result = null;
@@ -52,10 +53,10 @@ public class ReadThread implements Runnable{
                 if (hasRead < 0) {
                     break;
                 }
-                result = new String(buff,"gb2312");
+                result = new String(buff, "gb2312");
 ///             System.out.println(result);
                 int count = this.getCountByKeywords(result, keywords);
-                if(count > 0){
+                if (count > 0) {
                     this.curCount += count;
                 }
             }
@@ -95,8 +96,8 @@ public class ReadThread implements Runnable{
         this.raf = raf;
     }
 
-    public int getCountByKeywords(String statement,String key){
-        return statement.split(key).length-1;
+    public int getCountByKeywords(String statement, String key) {
+        return statement.split(key).length - 1;
     }
 
     public int getCurCount() {

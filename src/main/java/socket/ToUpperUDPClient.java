@@ -1,15 +1,17 @@
 package socket;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.*;
 
 public class ToUpperUDPClient {
 
     private DatagramSocket clientSocket;
+
+    public static void main(String[] args) {
+        ToUpperUDPClient client = new ToUpperUDPClient();
+        String recvStr = client.toUpperRemote(ToUpperUDPServer.SERVER_IP, ToUpperUDPServer.SERVER_PORT, "aaaAAAbbbBBBcccCCC");
+        System.out.println("收到:" + recvStr);
+    }
 
     public String toUpperRemote(String serverIp, int serverPort, String str) {
         String recvStr = "";
@@ -23,7 +25,7 @@ public class ToUpperUDPClient {
             sendBuf = str.getBytes();
             InetAddress serverAddr = InetAddress.getByName(serverIp);
             DatagramPacket sendPacket
-                    = new DatagramPacket(sendBuf ,sendBuf.length , serverAddr , serverPort);
+                    = new DatagramPacket(sendBuf, sendBuf.length, serverAddr, serverPort);
             try {
                 clientSocket.send(sendPacket);
             } catch (IOException e) {
@@ -33,7 +35,7 @@ public class ToUpperUDPClient {
             //接收服务器的响应
             byte[] recvBuf = new byte[ToUpperUDPServer.MAX_BYTES];
             DatagramPacket recvPacket
-                    = new DatagramPacket(recvBuf , recvBuf.length);
+                    = new DatagramPacket(recvBuf, recvBuf.length);
             try {
                 clientSocket.receive(recvPacket);
             } catch (IOException e) {
@@ -41,7 +43,7 @@ public class ToUpperUDPClient {
             }
 
             //显示响应
-            recvStr = new String(recvPacket.getData() , 0 ,recvPacket.getLength());
+            recvStr = new String(recvPacket.getData(), 0, recvPacket.getLength());
         } catch (SocketException e1) {
             e1.printStackTrace();
         } catch (UnknownHostException e2) {
@@ -54,12 +56,6 @@ public class ToUpperUDPClient {
         }
 
         return recvStr;
-    }
-
-    public static void main(String[] args) {
-        ToUpperUDPClient client = new ToUpperUDPClient();
-        String recvStr = client.toUpperRemote(ToUpperUDPServer.SERVER_IP, ToUpperUDPServer.SERVER_PORT, "aaaAAAbbbBBBcccCCC");
-        System.out.println("收到:" + recvStr);
     }
 
 }

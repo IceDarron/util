@@ -9,19 +9,20 @@ public class KeyWordsCount {
     private static KeyWordsCount kc;
 
     private int count = 0;
-    private KeyWordsCount(){
+
+    private KeyWordsCount() {
 
     }
 
-    public static synchronized KeyWordsCount getCountObject(){
-        if(kc == null){
+    public static synchronized KeyWordsCount getCountObject() {
+        if (kc == null) {
             kc = new KeyWordsCount();
         }
         return kc;
     }
 
-    public synchronized void  addCount(int count){
-        System.out.println("增加次数："+count);
+    public synchronized void addCount(int count) {
+        System.out.println("增加次数：" + count);
         this.count += count;
     }
 

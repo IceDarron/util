@@ -19,7 +19,7 @@ public class JedisUtils {
     public static Long getLong(Properties properties, String str, Long l) {
         possible = Optional.fromNullable(properties.getProperty(str));
         if (possible.isPresent()) {
-            l = Long.parseLong(properties.getProperty(str).replaceAll("L","").replaceAll("l",""));
+            l = Long.parseLong(properties.getProperty(str).replaceAll("L", "").replaceAll("l", ""));
         }
         return l;
     }

@@ -29,10 +29,10 @@ public class JedisPoolManager {
         int timeout = JedisUtils.getInt(prop, "timeout", 5000);
         // 是否单节点
         boolean isSingle = JedisUtils.getBoolean(prop, "isSingle", true);
-        String host = JedisUtils.getString(prop,"host", "127.0.0.1");
+        String host = JedisUtils.getString(prop, "host", "127.0.0.1");
         int port = JedisUtils.getInt(prop, "port", 6379);
-        String masterName = JedisUtils.getString(prop,"masterName", "mymaster");
-        String password = JedisUtils.getString(prop,"password", null);
+        String masterName = JedisUtils.getString(prop, "masterName", "mymaster");
+        String password = JedisUtils.getString(prop, "password", null);
         Set<String> sentinelSet = new HashSet<String>();
         if (prop.containsKey("sentinels")) {
             String sentinels = prop.getProperty("sentinels");

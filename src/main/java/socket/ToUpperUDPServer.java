@@ -1,11 +1,7 @@
 package socket;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.*;
 
 public class ToUpperUDPServer {
     //服务器IP
@@ -20,6 +16,11 @@ public class ToUpperUDPServer {
     //UDP使用DatagramSocket发送数据包
     private DatagramSocket serverSocket;
 
+    public static void main(String[] args) {
+        ToUpperUDPServer server = new ToUpperUDPServer();
+        server.startServer(SERVER_IP, SERVER_PORT);
+    }
+
     /***
      * 启动服务器
      * @param serverPort，服务器ip无需指定，系统自动分配
@@ -32,7 +33,7 @@ public class ToUpperUDPServer {
 
             //创建接收数据的对象
             byte[] recvBuf = new byte[MAX_BYTES];
-            DatagramPacket recvPacket = new DatagramPacket(recvBuf , recvBuf.length);
+            DatagramPacket recvPacket = new DatagramPacket(recvBuf, recvBuf.length);
 
             //死循环，一直运行服务器
             while (true) {
@@ -72,10 +73,5 @@ public class ToUpperUDPServer {
                 serverSocket = null;
             }
         }
-    }
-
-    public static void main(String[] args) {
-        ToUpperUDPServer server = new ToUpperUDPServer();
-        server.startServer(SERVER_IP, SERVER_PORT);
     }
 }
