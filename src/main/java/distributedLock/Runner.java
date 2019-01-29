@@ -12,7 +12,9 @@ public class Runner implements Callable {
 
     Integer expireTime;
 
-    int result;
+    int lockResult;
+
+    int releaseResult;
 
     public Runner() {
     }
@@ -28,17 +30,16 @@ public class Runner implements Callable {
         IDistributedLock iDistributedLock = new LockRedisImpl();
         requestId = Thread.currentThread().getName();
 
-        while (!"1".equals(result)) {
-            result = iDistributedLock.getDistributedLock(lockKey, requestId, acquireTime, expireTime);
-            if ("0".equals(result)) {
-                System.out.println("get lock, result:" + result + "    requestId:" + requestId);
-                System.out.println("wait to get lock");
+        while (lockResult == 0) {
+            lockResult = iDistributedLock.getDistributedLock(lockKey, requestId, acquireTime, expireTime);
+            if (lockResult == 0) {
+                System.out.println("wait to get lock, requestId:" + requestId);
+                Thread.sleep(expireTime / 2);
             } else {
-                System.out.println("get lock, result:" + result + "    requestId:" + requestId);
                 System.out.println("use lock..., requestId:" + requestId);
-                Thread.sleep(30000);
-                iDistributedLock.releaseDistributedLock(lockKey, requestId);
-                System.out.println("release lock, requestId:" + requestId);
+                Thread.sleep(expireTime / 2);
+                releaseResult = iDistributedLock.releaseDistributedLock(lockKey, requestId);
+                System.out.println("release lock, result:" + releaseResult + "    requestId:" + requestId);
             }
         }
         return null;
