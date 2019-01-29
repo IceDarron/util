@@ -2,6 +2,8 @@ package distributedLock;
 
 import java.util.concurrent.Callable;
 
+import static distributedLock.TestMultiThread.atomicInteger;
+
 public class Runner implements Callable {
 
     String lockKey;
@@ -33,10 +35,12 @@ public class Runner implements Callable {
         while (lockResult == 0) {
             lockResult = iDistributedLock.getDistributedLock(lockKey, requestId, acquireTime, expireTime);
             if (lockResult == 0) {
-                System.out.println("wait to get lock, requestId:" + requestId);
+                System.out.println("wait to get lock, requestId:" + requestId + "    current time:" + System.currentTimeMillis());
                 Thread.sleep(expireTime / 2);
             } else {
                 System.out.println("use lock..., requestId:" + requestId);
+                atomicInteger.decrementAndGet();
+                System.out.println("decrement, requestId:" + requestId + "    total: " + atomicInteger);
                 Thread.sleep(expireTime / 2);
                 releaseResult = iDistributedLock.releaseDistributedLock(lockKey, requestId);
                 System.out.println("release lock, result:" + releaseResult + "    requestId:" + requestId);
