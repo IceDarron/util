@@ -9,6 +9,9 @@ public class TestGuavaBloomFilter {
 
     public static void main(String[] args) {
         System.out.println(dealIdBloomFilter);
+
+        dealIdBloomFilter.put("0");
+        System.out.println(dealIdBloomFilter.approximateElementCount());
     }
 
     private final static  BloomFilter<String> dealIdBloomFilter = BloomFilter.create(new Funnel<String>() {
