@@ -4,6 +4,7 @@ import jedispool.JedisPoolManager;
 import redis.clients.jedis.Jedis;
 
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 基于redis的分布式锁
@@ -78,5 +79,21 @@ public class LockRedisImpl implements IDistributedLock {
                 jedis.close();
             }
         }
+    }
+
+    @Override
+    public void acquire() throws Exception {
+        // nothing to do
+    }
+
+    @Override
+    public boolean acquire(long time, TimeUnit unit) throws Exception {
+        // nothing to do
+        return false;
+    }
+
+    @Override
+    public void release() throws Exception {
+        // nothing to do
     }
 }
