@@ -80,20 +80,4 @@ public class LockRedisImpl implements IDistributedLock {
             }
         }
     }
-
-    @Override
-    public void acquire() throws Exception {
-        // nothing to do
-    }
-
-    @Override
-    public boolean acquire(long time, TimeUnit unit) throws Exception {
-        // nothing to do
-        return false;
-    }
-
-    @Override
-    public void release() throws Exception {
-        // nothing to do
-    }
 }
