@@ -4,7 +4,6 @@ import jedispool.JedisPoolManager;
 import redis.clients.jedis.Jedis;
 
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 基于redis的分布式锁
@@ -30,7 +29,7 @@ public class LockRedisImpl implements IDistributedLock {
     private static final Long RELEASE_SUCCESS = 1L;
 
     @Override
-    public int getDistributedLock(String lockKey, String requestId, Long acquireTime, Integer expireTime) {
+    public int getLock(String lockKey, String requestId, Long acquireTime, Integer expireTime) {
         Jedis jedis = null;
         try {
             jedis = JedisPoolManager.getJedis();
@@ -61,7 +60,7 @@ public class LockRedisImpl implements IDistributedLock {
     }
 
     @Override
-    public int releaseDistributedLock(String lockKey, String requestId) {
+    public int releaseLock(String lockKey, String requestId) {
         String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
         Jedis jedis = null;
         try {

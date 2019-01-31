@@ -33,7 +33,7 @@ public class Runner implements Callable {
         requestId = Thread.currentThread().getName();
 
         while (lockResult == 0) {
-            lockResult = iDistributedLock.getDistributedLock(lockKey, requestId, acquireTime, expireTime);
+            lockResult = iDistributedLock.getLock(lockKey, requestId, acquireTime, expireTime);
             if (lockResult == 0) {
                 System.out.println("wait to get lock, requestId:" + requestId + "    current time:" + System.currentTimeMillis());
                 Thread.sleep(expireTime / 2);
@@ -42,7 +42,7 @@ public class Runner implements Callable {
                 atomicInteger.decrementAndGet();
                 System.out.println("decrement, requestId:" + requestId + "    total: " + atomicInteger);
                 Thread.sleep(expireTime / 2);
-                releaseResult = iDistributedLock.releaseDistributedLock(lockKey, requestId);
+                releaseResult = iDistributedLock.releaseLock(lockKey, requestId);
                 System.out.println("release lock, result:" + releaseResult + "    requestId:" + requestId);
             }
         }

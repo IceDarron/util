@@ -1,7 +1,5 @@
 package distributedLock;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * 分布式锁
  * https://www.cnblogs.com/linjiqin/p/8003838.html
@@ -18,7 +16,7 @@ public interface IDistributedLock {
      * @param expireTime  超期时间
      * @return 是否获取成功 1=成功 0=失败
      */
-    int getDistributedLock(String lockKey, String requestId, Long acquireTime, Integer expireTime);
+    int getLock(String lockKey, String requestId, Long acquireTime, Integer expireTime);
 
     /**
      * 释放分布式锁
@@ -27,5 +25,5 @@ public interface IDistributedLock {
      * @param requestId 请求标识
      * @return 是否释放成功
      */
-    int releaseDistributedLock(String lockKey, String requestId);
+    int releaseLock(String lockKey, String requestId);
 }
