@@ -27,6 +27,6 @@ public class Test {
         CuratorFramework client = CuratorFrameworkFactory.newClient("10.4.59.141:2181", retryPolicy);
         client.start();
 
-        IDistributedLock iDistributedLock = new LockZookeeperImpl();
+//        IDistributedLock iDistributedLock = new LockZookeeperImpl();
     }
 }

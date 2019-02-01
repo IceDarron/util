@@ -84,9 +84,8 @@ public class LockZookeeperImpl implements IDistributedLock {
     public int getLock(String lockKey, String requestId, Long acquireTime, Integer expireTime) {
 
         try {
-            return interProcessMutex.acquire(timeout, unit);
-        } catch (InterruptedException e) {
-            throw e;
+            // TODO
+//            return interProcessMutex.acquire(timeout, unit);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage(), e);
