@@ -1,6 +1,5 @@
 package distributedLock;
 
-import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.zookeeper.KeeperException;
@@ -14,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * https://github.com/yujiasun/Distributed-Kit
  * https://github.com/ruanjianlxm/distributedLock
  */
-public class LockZookeeperImpl implements IDistributedLock {
+public class LockZookeeperImpl implements IDistributedLockRedis {
 
     /**
      * 线程池

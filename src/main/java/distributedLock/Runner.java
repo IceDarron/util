@@ -29,7 +29,7 @@ public class Runner implements Callable {
 
     @Override
     public Object call() throws Exception {
-        IDistributedLock iDistributedLock = new LockRedisImpl();
+        IDistributedLockRedis iDistributedLock = new LockRedisImpl();
         requestId = Thread.currentThread().getName();
 
         while (lockResult == 0) {

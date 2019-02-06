@@ -17,7 +17,7 @@ import java.util.Collections;
  * @author IceDarron
  * @since 20190117
  */
-public class LockRedisImpl implements IDistributedLock {
+public class LockRedisImpl implements IDistributedLockRedis {
 
     private static final String LOCK_SUCCESS = "OK";
     // NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key if it already exist.

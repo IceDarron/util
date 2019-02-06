@@ -14,9 +14,7 @@ public class Test {
 //        Jedis jedis = JedisPoolManager.getJedis();
 //        System.out.println(jedis.set("TEST_DISTRIBUTED_LOCK", "1", "NX", "PX", 5000));
 //        System.out.println(jedis.set("TEST_DISTRIBUTED_LOCK", "2", "NX", "PX", 5000));
-
-
-//        IDistributedLock iDistributedLock = new LockRedisImpl();
+//        IDistributedLockRedis iDistributedLock = new LockRedisImpl();
 //        System.out.println(iDistributedLock.getLock("TEST_DISTRIBUTED_LOCK", Thread.currentThread().getName(), 500L, 5000));
 //        System.out.println(iDistributedLock.releaseLock("TEST_DISTRIBUTED_LOCK", Thread.currentThread().getName()));
 
@@ -27,6 +25,6 @@ public class Test {
         CuratorFramework client = CuratorFrameworkFactory.newClient("10.4.59.141:2181", retryPolicy);
         client.start();
 
-//        IDistributedLock iDistributedLock = new LockZookeeperImpl();
+//        IDistributedLockRedis iDistributedLock = new LockZookeeperImpl();
     }
 }

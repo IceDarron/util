@@ -5,7 +5,7 @@ package distributedLock;
  * https://www.cnblogs.com/linjiqin/p/8003838.html
  * https://blog.csdn.net/xlgen157387/article/details/79036337
  */
-public interface IDistributedLock {
+public interface IDistributedLockRedis {
 
     /**
      * 获取分布式锁
