@@ -1,8 +1,8 @@
-package distributedLock;
+package distributedLock.redis;
 
 import java.util.concurrent.Callable;
 
-import static distributedLock.TestMultiThread.atomicInteger;
+import static distributedLock.redis.TestMultiThread.atomicInteger;
 
 public class Runner implements Callable {
 

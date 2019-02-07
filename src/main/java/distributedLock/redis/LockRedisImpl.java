@@ -1,4 +1,4 @@
-package distributedLock;
+package distributedLock.redis;
 
 import jedispool.JedisPoolManager;
 import redis.clients.jedis.Jedis;

@@ -1,4 +1,4 @@
-package distributedLock;
+package distributedLock.zookeeper;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * https://github.com/yujiasun/Distributed-Kit
  * https://github.com/ruanjianlxm/distributedLock
  */
-public class LockZookeeperImpl implements IDistributedLockRedis {
+public class LockZookeeperImpl implements IDistributedLockZookeeper {
 
     /**
      * 线程池
@@ -46,12 +46,47 @@ public class LockZookeeperImpl implements IDistributedLockRedis {
      */
     private CuratorFramework client;
 
+    /**
+     * 回调
+     */
+    ICallback iCallback;
 
+    public ICallback getiCallback() {
+        return iCallback;
+    }
 
-    public LockZookeeperImpl(CuratorFramework client, String lockId) {
+    public LockZookeeperImpl(CuratorFramework client, String lockId, ICallback iCallback) {
         this.client = client;
         this.path = ROOT_PATH + lockId;
+        this.iCallback = iCallback;
         this.interProcessMutex = new InterProcessMutex(client, this.path);
+    }
+
+    @Override
+    public void acquire() throws Exception {
+
+    }
+
+    @Override
+    public int acquire(long timeout, TimeUnit unit) {
+        try {
+            return interProcessMutex.acquire(timeout, unit) ? 1 : 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int release() {
+        try {
+            interProcessMutex.release();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        } finally {
+            executorService.schedule(new Cleaner(client, path), delayTimeForClean, TimeUnit.MILLISECONDS);
+        }
+        return 0;
     }
 
     static class Cleaner implements Runnable {
@@ -77,30 +112,5 @@ public class LockZookeeperImpl implements IDistributedLockRedis {
                 e.printStackTrace();//准备删除时,正好有线程创建锁
             }
         }
-    }
-
-    @Override
-    public int getLock(String lockKey, String requestId, Long acquireTime, Integer expireTime) {
-
-        try {
-            // TODO
-//            return interProcessMutex.acquire(timeout, unit);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        return 0;
-    }
-
-    @Override
-    public int releaseLock(String lockKey, String requestId) {
-        try {
-            interProcessMutex.release();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        } finally {
-            executorService.schedule(new Cleaner(client, path), delayTimeForClean, TimeUnit.MILLISECONDS);
-        }
-        return 0;
     }
 }

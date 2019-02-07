@@ -1,4 +1,4 @@
-package distributedLock;
+package distributedLock.redis;
 
 /**
  * 分布式锁
