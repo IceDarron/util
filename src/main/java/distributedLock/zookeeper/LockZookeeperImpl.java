@@ -10,8 +10,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * https://github.com/yujiasun/Distributed-Kit
- * https://github.com/ruanjianlxm/distributedLock
+ * https://github.com/yujiasun/Distributed-Kit  锁实现
+ * https://github.com/ruanjianlxm/distributedLock  锁实现
+ * https://www.jianshu.com/p/70151fc0ef5d  Curator使用详解
+ * https://blog.csdn.net/panamera918/article/details/80196762  原理
  */
 public class LockZookeeperImpl implements IDistributedLockZookeeper {
 
