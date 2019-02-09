@@ -5,6 +5,9 @@ import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnel;
 import com.google.common.hash.PrimitiveSink;
 
+/**
+ * https://blog.csdn.net/top_code/article/details/51280862
+ */
 public class TestGuavaBloomFilter {
 
     public static void main(String[] args) {
