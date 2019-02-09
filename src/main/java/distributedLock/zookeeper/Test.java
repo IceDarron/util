@@ -18,10 +18,9 @@ public class Test {
         // zookeeper通讯测试
 //        System.out.println(client.checkExists());
 //        System.out.println(client.getState());
-//
 //        try {
-////            client.create().forPath("/test");
-////            client.create().forPath("/test1", "init".getBytes());
+//           client.create().forPath("/test");
+//          client.create().forPath("/test1", "init".getBytes());
 //            client.setData().forPath("/test1","data".getBytes());
 //            System.out.println(client.getData().forPath("/test1"));
 //            System.out.println(client.checkExists().forPath("/test1"));
