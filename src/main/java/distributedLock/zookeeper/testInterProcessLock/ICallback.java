@@ -1,4 +1,4 @@
-package distributedLock.zookeeper;
+package distributedLock.zookeeper.testInterProcessLock;
 
 public interface ICallback {
 
