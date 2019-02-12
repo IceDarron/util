@@ -5,12 +5,6 @@ import org.apache.curator.framework.CuratorFramework;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-/**
- * https://github.com/yujiasun/Distributed-Kit  锁实现
- * https://github.com/ruanjianlxm/distributedLock  锁实现
- * https://www.jianshu.com/p/70151fc0ef5d  Curator使用详解
- * https://blog.csdn.net/panamera918/article/details/80196762  原理
- */
 public class LockZookeeperImpl extends BaseDistributedLockZookeeper implements IDistributedLockZookeeper {
 
     // 用于保存Zookeeper中实现分布式锁的节点，如名称为locker：/locker，该节点应该是持久节点，在该节点下面创建临时顺序节点来实现分布式锁
@@ -21,6 +15,21 @@ public class LockZookeeperImpl extends BaseDistributedLockZookeeper implements I
 
     // 用于保存某个客户端在locker下面创建成功的顺序节点，用于后续相关操作使用（如判断
     private String ourLockPath;
+
+    public LockZookeeperImpl() {
+    }
+
+    /**
+     * 传入Zookeeper客户端连接对象，和basePath
+     *
+     * @param client   Zookeeper客户端连接对象
+     * @param basePath basePath是一个持久节点
+     */
+    public LockZookeeperImpl(CuratorFramework client, String basePath) {
+        // 调用父类的构造方法在Zookeeper中创建basePath节点，并且为basePath节点子节点设置前缀,同时保存basePath的引用给当前类属性
+        super(client, basePath, LOCK_NAME);
+        this.basePath = basePath;
+    }
 
     /**
      * 用于获取锁资源，通过父类的获取锁方法来获取锁
@@ -36,18 +45,6 @@ public class LockZookeeperImpl extends BaseDistributedLockZookeeper implements I
         return ourLockPath != null;
     }
 
-    /**
-     * 传入Zookeeper客户端连接对象，和basePath
-     *
-     * @param client   Zookeeper客户端连接对象
-     * @param basePath basePath是一个持久节点
-     */
-    public LockZookeeperImpl(CuratorFramework client, String basePath) {
-        /*调用父类的构造方法在Zookeeper中创建basePath节点，并且为basePath节点子节点设置前缀
-         *同时保存basePath的引用给当前类属性*/
-        super(client, basePath, LOCK_NAME);
-        this.basePath = basePath;
-    }
 
     /**
      * 获取锁，直到超时，超时后抛出异常
