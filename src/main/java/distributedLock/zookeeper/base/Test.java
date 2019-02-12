@@ -5,6 +5,9 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 public class Test {
 
     public static void main(String[] args) {
@@ -29,12 +32,25 @@ public class Test {
 //        }
 
         // 测试分布式锁
-        IDistributedLockZookeeper iDistributedLockZookeeper = new LockZookeeperImpl(client, "/ROOT_LOCK");
+//        IDistributedLockZookeeper iDistributedLockZookeeper = new LockZookeeperImpl(client, "/ROOT_LOCK");
+//        try {
+//            iDistributedLockZookeeper.acquire();
+//            Thread.sleep(10000);
+//            iDistributedLockZookeeper.release();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         try {
-            iDistributedLockZookeeper.acquire();
-            Thread.sleep(10000);
-            iDistributedLockZookeeper.release();
-        } catch (Exception e) {
+            CountDownLatch countDownLatch = new CountDownLatch(1);
+
+            for (int i = 0; i < 100; i++) {
+                System.out.println(i);
+                System.out.println(countDownLatch.await(1000, TimeUnit.MILLISECONDS));
+                if (i == 3) {
+                    countDownLatch.countDown();
+                }
+            }
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

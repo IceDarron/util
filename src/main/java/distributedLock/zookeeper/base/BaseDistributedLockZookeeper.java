@@ -1,6 +1,8 @@
 package distributedLock.zookeeper.base;
 
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.cache.NodeCache;
+import org.apache.curator.framework.recipes.cache.NodeCacheListener;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 
@@ -83,15 +85,9 @@ public class BaseDistributedLockZookeeper {
                 // 此时当前客户端需要等待其它客户端释放锁，
                 boolean isGetTheLock = ourIndex == 0;
 
-                // 如何判断其它客户端是否已经释放了锁？从子节点列表中获取到比自己次小的哪个节点，并对其建立监听
-                String pathToWatch = isGetTheLock ? null : children.get(ourIndex - 1);
-
                 if (isGetTheLock) {
                     haveTheLock = true;
                 } else {
-                    // 当前客户端所持有的节点减一的节点号
-                    String previousSequencePath = basePath.concat("/").concat(pathToWatch);
-
                     // 到了超时时间还没获取到就结束了
                     if (millisToWait != null) {
                         millisToWait -= (System.currentTimeMillis() - startMillis);
@@ -103,6 +99,82 @@ public class BaseDistributedLockZookeeper {
                     }
                 }
             }
+        } catch (Exception e) {
+            // 发生异常需要删除节点
+            doDelete = true;
+            throw e;
+        } finally {
+            // 如果需要删除节点
+            if (doDelete) {
+                deleteOurPath(ourPath);
+            }
+        }
+        return haveTheLock;
+    }
+
+    /**
+     * 获取锁的核心方法
+     * 通过监控的方式获取锁
+     *
+     * @param startMillis  开始时间
+     * @param millisToWait 超时时间
+     * @param ourPath      临时顺序节点
+     * @return
+     * @throws Exception
+     */
+    private boolean waitToLockNew(long startMillis, Long millisToWait, String ourPath) throws Exception {
+        boolean haveTheLock = false;
+        boolean doDelete = false;
+        boolean isGetTheLock = false;
+        String pathToWatch = null;
+
+        try {
+                List<String> children = getSortedChildren();
+                int ourIndex = children.indexOf(ourPath.substring(basePath.length() + 1));
+                if (ourIndex < 0) {
+                    throw new Exception("节点没有找到: " + ourPath.substring(basePath.length() + 1));
+                } else if (ourIndex == 0) {
+                    isGetTheLock = true;
+                } else {
+                    pathToWatch = isGetTheLock ? null : children.get(ourIndex - 1);
+                }
+
+                if (isGetTheLock) {
+                    haveTheLock = true;
+                } else {
+                    // 当前客户端所持有的节点减一的节点号
+                    String previousSequencePath = basePath.concat("/").concat(pathToWatch);
+                    CountDownLatch countDownLatch = new CountDownLatch(1);
+
+                    // 想要监控单独节点的删除，但是好像并不支持
+                    final NodeCache nodeCache = new NodeCache(client, previousSequencePath, false);
+                    nodeCache.getListenable().addListener(new NodeCacheListener() {
+                        @Override
+                        public void nodeChanged() throws Exception {
+                            countDownLatch.countDown();
+                        }
+                    });
+                    nodeCache.start();
+
+                    while (true) {
+                        if (millisToWait != null) {
+                            millisToWait -= (System.currentTimeMillis() - startMillis);
+                            startMillis = System.currentTimeMillis();
+                            if (millisToWait <= 0) {
+                                doDelete = true;
+                                break;
+                            }
+                            // 其实是缩小了1000倍
+                            if (countDownLatch.await(millisToWait, TimeUnit.MICROSECONDS)) {
+                                break;
+                            }
+                        } else {
+                            countDownLatch.await();
+                        }
+                    }
+                    System.out.println(haveTheLock);
+                    haveTheLock = true;
+                }
         } catch (Exception e) {
             // 发生异常需要删除节点
             doDelete = true;
@@ -179,7 +251,8 @@ public class BaseDistributedLockZookeeper {
                 ourPath = createLockNode(client, path, CreateMode.EPHEMERAL_SEQUENTIAL);
                 // 该方法用于判断自己是否获取到了锁，即自己创建的顺序节点在locker的所有子节点中是否最小
                 // 如果没有获取到锁，则等待其它客户端锁的释放，并且稍后重试直到获取到锁或者超时
-                hasTheLock = waitToLock(startMillis, millisToWait, ourPath);
+                hasTheLock = waitToLock(startMillis, millisToWait, ourPath); // 无监控
+//                hasTheLock = waitToLockNew(startMillis, millisToWait, ourPath); // 监控 不好用 原因是想要单独监控客户端请求的节点的上一个节点的释放。api不支持。所以只能监控锁节点下的所有子节点变化。
             } catch (Exception e) {
                 if (retryCount++ < MAX_RETRY_COUNT) {
                     isDone = false;

@@ -6,12 +6,13 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TestMultiThread {
 
-    public static int threadCount = 3; // 线程数
+    public static int threadCount = 5; // 线程数
     public static ExecutorService executorService = Executors.newCachedThreadPool();//线程池
 
     public static void main(String[] args) {
@@ -36,6 +37,25 @@ public class TestMultiThread {
             System.out.println("end executor:" + System.currentTimeMillis());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        // 执行完测试后，关闭程序
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        while (true) {
+            try {
+                List list = client.getChildren().forPath(lock_node);
+                if (list.size() == 0) {
+                    client.close();
+                    executorService.shutdown();
+                    break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

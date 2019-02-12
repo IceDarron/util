@@ -19,17 +19,20 @@ public class Runner implements Callable {
 
         IDistributedLockZookeeper locker = new LockZookeeperImpl(client, "/ROOT_LOCK");
         try {
-            boolean lockFlag = locker.acquire(5000, TimeUnit.MILLISECONDS);
+            boolean lockFlag = locker.acquire(30000, TimeUnit.MILLISECONDS);
             if (lockFlag) {
                 System.out.println("获得锁" + Thread.currentThread().getName());
-                Thread.sleep(10000);
+                Thread.sleep(5000);
                 locker.release();
+                System.out.println("释放锁" + Thread.currentThread().getName());
             } else {
                 System.out.println("没有获得锁" + Thread.currentThread().getName());
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            client.close();
         }
         return null;
     }
