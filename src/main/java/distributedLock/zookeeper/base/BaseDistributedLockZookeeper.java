@@ -53,9 +53,9 @@ public class BaseDistributedLockZookeeper {
     /**
      * 获取锁的核心方法
      *
-     * @param startMillis
-     * @param millisToWait
-     * @param ourPath
+     * @param startMillis  开始时间
+     * @param millisToWait 超时时间
+     * @param ourPath      临时顺序节点
      * @return
      * @throws Exception
      */
@@ -89,42 +89,17 @@ public class BaseDistributedLockZookeeper {
                 if (isGetTheLock) {
                     haveTheLock = true;
                 } else {
-                    // 如果次小的节点被删除了，则表示当前客户端的节点应该是最小的了，所以使用CountDownLatch来实现等待
+                    // 当前客户端所持有的节点减一的节点号
                     String previousSequencePath = basePath.concat("/").concat(pathToWatch);
-                    final CountDownLatch latch = new CountDownLatch(1);
-                    final IZkDataListener previousListener = new IZkDataListener() {
-                        // 次小节点删除事件发生时，让countDownLatch结束等待
-                        // 此时还需要重新让程序回到while，重新判断一次！
-                        public void handleDataDeleted(String dataPath) throws Exception {
-                            latch.countDown();
+
+                    // 到了超时时间还没获取到就结束了
+                    if (millisToWait != null) {
+                        millisToWait -= (System.currentTimeMillis() - startMillis);
+                        startMillis = System.currentTimeMillis();
+                        if (millisToWait <= 0) {
+                            doDelete = true;    // timed out - delete our node
+                            break;
                         }
-
-                        public void handleDataChange(String dataPath, Object data) throws Exception {
-                            // ignore
-                        }
-                    };
-
-                    try {
-                        //如果节点不存在会出现异常
-                        client.subscribeDataChanges(previousSequencePath, previousListener);
-
-                        if (millisToWait != null) {
-                            millisToWait -= (System.currentTimeMillis() - startMillis);
-                            startMillis = System.currentTimeMillis();
-                            if (millisToWait <= 0) {
-                                doDelete = true;    // timed out - delete our node
-                                break;
-                            }
-
-                            latch.await(millisToWait, TimeUnit.MICROSECONDS);
-                        } else {
-                            latch.await();
-                        }
-
-                    } catch (Exception e) {
-                        //ignore
-                    } finally {
-                        client.unsubscribeDataChanges(previousSequencePath, previousListener);
                     }
                 }
             }
@@ -132,7 +107,6 @@ public class BaseDistributedLockZookeeper {
             // 发生异常需要删除节点
             doDelete = true;
             throw e;
-
         } finally {
             // 如果需要删除节点
             if (doDelete) {

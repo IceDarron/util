@@ -10,7 +10,7 @@ public class Test {
     public static void main(String[] args) {
         // 创建zookeeper客户端
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
-        CuratorFramework client = CuratorFrameworkFactory.newClient("10.4.59.141:2181", retryPolicy);
+        CuratorFramework client = CuratorFrameworkFactory.newClient("localhost:2181", retryPolicy);
         client.start();
 
         // zookeeper通讯测试
@@ -27,11 +27,6 @@ public class Test {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        try {
-            client.delete().guaranteed().forPath("/ROOT_LOCK/lock-");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         // 测试分布式锁
         IDistributedLockZookeeper iDistributedLockZookeeper = new LockZookeeperImpl(client, "/ROOT_LOCK");
