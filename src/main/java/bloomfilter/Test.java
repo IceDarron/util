@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * http://www.cnblogs.com/haippy/archive/2012/07/13/2590351.html  原理
+ * https://www.cnblogs.com/devilwind/p/7374017.html 利用布隆过滤器进行统计
  */
 public class Test {
 
