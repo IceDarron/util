@@ -58,7 +58,12 @@ public class Handler {
             byteBuffer.flip();
             String requestData = Charset.forName(localCharset).newDecoder().decode(byteBuffer).toString();
             System.out.println("服务端已接受到客户端请求：" + requestData);
-
+            System.out.println(Thread.currentThread().getId());
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             String responseData = "服务端响应数据";
             byteBuffer = ByteBuffer.wrap(responseData.getBytes(localCharset));
             socketChannel.write(byteBuffer);
