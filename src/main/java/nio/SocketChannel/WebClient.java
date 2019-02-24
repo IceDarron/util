@@ -5,9 +5,11 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class WebClient {
-    public static void main(String[] args) throws IOException {
-        for (int i = 0; i < 10; i++) {
+public class WebClient implements Runnable {
+
+    @Override
+    public void run() {
+        try {
             // 1.通过SocketChannel的open()方法创建一个SocketChannel对象
             SocketChannel socketChannel = SocketChannel.open();
 
@@ -16,7 +18,7 @@ public class WebClient {
 
             // 3.创建写数据缓存区对象
             ByteBuffer writeBuffer = ByteBuffer.allocate(128);
-            writeBuffer.put("hello WebServer this is from WebClient".getBytes());
+            writeBuffer.put(("WebClient`s msg" + Thread.currentThread().getId()).getBytes());
             writeBuffer.flip();
             socketChannel.write(writeBuffer);
 
@@ -33,6 +35,8 @@ public class WebClient {
             }
             System.out.println("从服务端接收到的数据：" + sb);
             socketChannel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

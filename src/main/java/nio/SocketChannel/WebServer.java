@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 
 public class WebServer {
     public static void main(String[] args) {
@@ -22,25 +23,16 @@ public class WebServer {
                 socketChannel = ssc.accept();
 
                 // 3.创建写数据的缓存区对象
-                ByteBuffer writeBuffer = ByteBuffer.allocate(128);
-                writeBuffer.put("hello WebClient this is from WebServer".getBytes());
-                writeBuffer.flip();
-                socketChannel.write(writeBuffer);
+                ByteBuffer write = ByteBuffer.allocate(256);
+                write.put("hello WebClient this is from WebServer".getBytes());
+                write.flip();
+                socketChannel.write(write);
 
-                // 创建读数据的缓存区对象
-                ByteBuffer readBuffer = ByteBuffer.allocate(128);
-
-                // 读取缓存区数据
-                socketChannel.read(readBuffer);
-                StringBuffer sb = new StringBuffer();
-
-                // 4.将Buffer从写模式变为可读模式
-                readBuffer.flip();
-
-                while (readBuffer.hasRemaining()) {
-                    sb.append(readBuffer.get());
-                }
-                System.out.println("从客户端接收到的数据：" + sb);
+                ByteBuffer read = ByteBuffer.allocate(256);
+                socketChannel.read(read);
+                read.flip();
+                String requestData = Charset.forName("UTF-8").newDecoder().decode(read).toString();
+                System.out.println("从客户端接收到的数据：" + requestData);
             }
         } catch (IOException e) {
             e.printStackTrace();

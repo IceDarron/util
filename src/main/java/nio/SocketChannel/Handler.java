@@ -42,6 +42,11 @@ public class Handler {
         SocketChannel socketChannel = ((ServerSocketChannel) selectionKey.channel()).accept();
         socketChannel.configureBlocking(false);
         socketChannel.register(selectionKey.selector(), SelectionKey.OP_READ, ByteBuffer.allocate(bufferSize));
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
