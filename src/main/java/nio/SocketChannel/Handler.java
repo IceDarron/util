@@ -42,6 +42,7 @@ public class Handler {
         SocketChannel socketChannel = ((ServerSocketChannel) selectionKey.channel()).accept();
         socketChannel.configureBlocking(false);
         socketChannel.register(selectionKey.selector(), SelectionKey.OP_READ, ByteBuffer.allocate(bufferSize));
+        System.out.println("服务端已连接客户端请求");
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -63,14 +64,12 @@ public class Handler {
             byteBuffer.flip();
             String requestData = Charset.forName(localCharset).newDecoder().decode(byteBuffer).toString();
             System.out.println("服务端已接受到客户端请求：" + requestData);
-            System.out.println(Thread.currentThread().getId());
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            String responseData = "服务端响应数据";
-            byteBuffer = ByteBuffer.wrap(responseData.getBytes(localCharset));
+            byteBuffer = ByteBuffer.wrap(("服务端响应数据" + requestData).getBytes(localCharset));
             socketChannel.write(byteBuffer);
             socketChannel.close();
         }

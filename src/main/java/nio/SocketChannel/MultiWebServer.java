@@ -33,8 +33,8 @@ public class MultiWebServer {
                     System.out.println("等待请求超时......");
                     continue;
                 }
-                System.out.println("------处理数据------");
 
+                System.out.println("------处理数据------");
                 // 获取待处理的选择键集合
                 Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 
 public class WebClient implements Runnable {
 
@@ -24,11 +25,12 @@ public class WebClient implements Runnable {
             ByteBuffer readBuffer = ByteBuffer.allocate(128);
             socketChannel.read(readBuffer);
             readBuffer.flip();
-            StringBuffer sb = new StringBuffer();
-            while (readBuffer.hasRemaining()) {
-                sb.append((char) readBuffer.get());
-            }
-            System.out.println("从服务端接收到的数据：" + sb);
+            String requestData = Charset.forName("UTF-8").newDecoder().decode(readBuffer).toString();
+//            StringBuffer sb = new StringBuffer();
+//            while (readBuffer.hasRemaining()) {
+//                sb.append((char) readBuffer.get());
+//            }
+            System.out.println("从服务端接收到的数据：" + requestData);
             socketChannel.close();
         } catch (IOException e) {
             e.printStackTrace();
