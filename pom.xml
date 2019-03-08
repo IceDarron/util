@@ -110,5 +110,11 @@
             <artifactId>kryo</artifactId>
             <version>5.0.0-RC2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/de.ruedigermoeller/fst -->
+        <dependency>
+            <groupId>de.ruedigermoeller</groupId>
+            <artifactId>fst</artifactId>
+            <version>2.57</version>
+        </dependency>
     </dependencies>
 </project>

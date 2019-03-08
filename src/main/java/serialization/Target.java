@@ -31,4 +31,31 @@ public class Target implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (!(obj instanceof Target)) {
+            return false;
+        }
+
+        Target person = (Target) obj;
+
+        if (!this.username.equals(person.getUsername())) {
+            return false;
+        }
+
+        if (this.age != person.getAge()) {
+            return false;
+        }
+
+        if (!this.password.equals(person.getPassword())) {
+            return false;
+        }
+
+        return true;
+    }
 }

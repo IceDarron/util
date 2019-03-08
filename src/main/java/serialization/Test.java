@@ -20,6 +20,7 @@ public class Test {
         bean.setPassword("123456");
         bean.setAge(1000000);
         System.out.println("序列化&反序列化 性能测试：");
+        Target target;
         // 压缩量级
         int maxSerializationCount = 1000000;
 
@@ -29,7 +30,12 @@ public class Test {
         for (int i = 0; i < maxSerializationCount; i++) {
             byte[] serialize = FstUtils.serialize(bean);
             fstSize += serialize.length;
-            Target target = (Target) FstUtils.unserialize(serialize);
+            target = (Target) FstUtils.unserialize(serialize);
+
+            if (!bean.equals(target)) {
+                System.out.println("反序列化不完整");
+                break;
+            }
         }
         System.out.println("fst序列化方案[序列化" + maxSerializationCount + "次]耗时：" + (System.currentTimeMillis() - fstTime) + "ms size:=" + fstSize);
 
@@ -39,7 +45,12 @@ public class Test {
         for (int i = 0; i < maxSerializationCount; i++) {
             byte[] serialize = KryoUtils.writeToByteArray(bean);
             kryoSize += serialize.length;
-            Target target = (Target) KryoUtils.readFromByteArray(serialize);
+            target = (Target) KryoUtils.readFromByteArray(serialize);
+
+            if (!bean.equals(target)) {
+                System.out.println("反序列化不完整");
+                break;
+            }
         }
         System.out.println("kryo序列化方案[序列化" + maxSerializationCount + "次]耗时：" + (System.currentTimeMillis() - kryoTime) + "ms size:=" + kryoSize);
 
@@ -63,10 +74,15 @@ public class Test {
             byte[] serialize = byteArrayOutputStream.toByteArray();
             kryoPoolSize += serialize.length;
             input.setBuffer(serialize);
-            Target target = (Target) kryo.readClassAndObject(input);
+            target = (Target) kryo.readClassAndObject(input);
 
             output.reset();
             byteArrayOutputStream.reset();
+
+            if (!bean.equals(target)) {
+                System.out.println("反序列化不完整");
+                break;
+            }
         }
         System.out.println("kryo序列化方案[序列化" + maxSerializationCount + "次]耗时：" + (System.currentTimeMillis() - kryoPoolTime) + "ms size:=" + kryoPoolSize);
 
