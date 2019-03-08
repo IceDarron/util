@@ -14,7 +14,7 @@ import java.io.UnsupportedEncodingException;
  * Kryo Utils
  * <p/>
  */
-public class KryoUtil {
+public class KryoUtils {
 
     private static final String DEFAULT_ENCODING = "UTF-8";
 
