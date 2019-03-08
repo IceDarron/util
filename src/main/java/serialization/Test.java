@@ -22,7 +22,7 @@ public class Test {
         System.out.println("序列化&反序列化 性能测试：");
         Target target;
         // 压缩量级
-        int maxSerializationCount = 1000000;
+        int maxSerializationCount = 100000;
 
         // fst
         long fstSize = 0;
@@ -84,7 +84,7 @@ public class Test {
                 break;
             }
         }
-        System.out.println("kryo序列化方案[序列化" + maxSerializationCount + "次]耗时：" + (System.currentTimeMillis() - kryoPoolTime) + "ms size:=" + kryoPoolSize);
+        System.out.println("kryo-Pool序列化方案[序列化" + maxSerializationCount + "次]耗时：" + (System.currentTimeMillis() - kryoPoolTime) + "ms size:=" + kryoPoolSize);
 
         poolKryo.free(kryo);
         poolOutput.free(output);
