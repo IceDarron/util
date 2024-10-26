@@ -10,7 +10,7 @@ public class InPutStream {
     @SuppressWarnings("resource")
     public static void main(String[] args) {
         try {
-            InputStream is = new FileInputStream("H:/Myeclipse/workspace/TestUtil/src/com/darron/io/a.txt");
+            InputStream is = new FileInputStream("/Users/rongxuning/vscode/util/src/main/java/io/a.txt");
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             StringBuffer sb = new StringBuffer();
             String str = "";
