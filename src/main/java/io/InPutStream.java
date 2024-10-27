@@ -21,6 +21,5 @@ public class InPutStream {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
