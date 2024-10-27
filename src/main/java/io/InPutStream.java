@@ -20,6 +20,7 @@ public class InPutStream {
             System.out.println(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
+            // 测试vscode的ssh连接
         }
     }
 }
